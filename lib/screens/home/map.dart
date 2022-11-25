@@ -45,19 +45,26 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
+  void setLocation(currentLocation) {
+    print(currentLocation);
+    setState(() {
+      lat = currentLocation.latitude!;
+      lng = currentLocation.longitude!;
+    });
+  }
+
   void getLocation() async {
     print('hello');
     LocationData _locationData;
     Location location = Location();
     _locationData = await location.getLocation();
-
-    location.onLocationChanged.listen((LocationData currentLocation) {
+    setLocation(_locationData);
       setState(() {
-        lat = currentLocation.latitude!;
-        lng = currentLocation.longitude!;
         isLoading = false;
       });
-    });
+    // location.onLocationChanged.listen((LocationData currentLocation) {
+      
+    // });
 
     // setState((){
     //   location.onLocationChanged.listen((LocationData currentLocation) {
@@ -81,7 +88,15 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return isLoading
-        ? Container()
+        ? Scaffold(
+            // backgroundColor: Colors.white,
+            body: Center(
+              child: CircularProgressIndicator(
+                color: kPrimaryColor,
+                // strokeWidth: 2.0,
+              ),
+            ),
+          )
         : Scaffold(
             // appBar: AppBar(
             //   title: const Text('Live location'),
@@ -106,9 +121,11 @@ class _MapPageState extends State<MapPage> {
               children: [
                 FlutterMap(
                   options: MapOptions(
-                    center: LatLng(lat, lng),
-                    zoom: 18.0,
-                  ),
+                      center: LatLng(lat, lng),
+                      zoom: 18.0,
+                      onTap: (tapPos, latLong) {
+                        setLocation(latLong);
+                      }),
                   layers: [
                     TileLayerOptions(
                       urlTemplate:
@@ -145,7 +162,7 @@ class _MapPageState extends State<MapPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
-                          return const WaterQuality();
+                          return WaterQuality(lat: lat, long: lng);
                         }),
                       );
                       // var token = await storage.read(key: "token");
