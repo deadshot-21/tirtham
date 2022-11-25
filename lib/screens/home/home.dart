@@ -114,6 +114,7 @@ class _HomeState extends State<Home> {
         // onTap: _navigateBottomBar,
         onTap: (selectedPageIndex) {
           setState(() {
+            isLoading = false;
             _selectedIndex = selectedPageIndex;
             _pageController.jumpToPage(selectedPageIndex);
           });

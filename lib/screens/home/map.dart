@@ -59,11 +59,11 @@ class _MapPageState extends State<MapPage> {
     Location location = Location();
     _locationData = await location.getLocation();
     setLocation(_locationData);
-      setState(() {
-        isLoading = false;
-      });
+    setState(() {
+      isLoading = false;
+    });
     // location.onLocationChanged.listen((LocationData currentLocation) {
-      
+
     // });
 
     // setState((){
@@ -159,6 +159,14 @@ class _MapPageState extends State<MapPage> {
                   left: kDefaultPadding,
                   child: GestureDetector(
                     onTap: () async {
+                      Response response = await dio.post(
+                        'https://80ba-175-100-131-148.in.ngrok.io/getReflectance',
+                        options: Options(headers: {
+                          HttpHeaders.contentTypeHeader: "application/json",
+                        }),
+                        // data: jsonEncode(value),
+                        data: {"lat": lat, "long": lng},
+                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
