@@ -160,7 +160,7 @@ class _MapPageState extends State<MapPage> {
                   child: GestureDetector(
                     onTap: () async {
                       Response response = await dio.post(
-                        'https://80ba-175-100-131-148.in.ngrok.io/getReflectance',
+                        'https://447f-175-100-134-52.in.ngrok.io/getReflectanceM',
                         options: Options(headers: {
                           HttpHeaders.contentTypeHeader: "application/json",
                         }),

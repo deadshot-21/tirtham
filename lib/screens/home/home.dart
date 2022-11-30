@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool isLoading = true;
+  // bool isLoading = true;
   List data = [];
   Map dataOrg = {};
   String error = "";
@@ -62,17 +62,17 @@ class _HomeState extends State<Home> {
   //   }
   // }
 
-  Future<void> _refreshPage() async {
-    setState(() {
-      isLoading = true;
-      // getOrgs();
-    });
-  }
+  // Future<void> _refreshPage() async {
+  //   setState(() {
+  //     // isLoading = true;
+  //     // getOrgs();
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
-    isLoading = true;
+    // isLoading = true;
     // getOrgs();
     _selectedIndex = 0;
     _screens = [
@@ -114,7 +114,7 @@ class _HomeState extends State<Home> {
         // onTap: _navigateBottomBar,
         onTap: (selectedPageIndex) {
           setState(() {
-            isLoading = false;
+            // isLoading = false;
             _selectedIndex = selectedPageIndex;
             _pageController.jumpToPage(selectedPageIndex);
           });
