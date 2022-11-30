@@ -7,7 +7,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:tirtham/constants.dart';
+import 'package:tirtham/screens/home/prLoader.dart';
 import 'package:tirtham/screens/home/waterQuality.dart';
+import 'package:tirtham/utils/snack.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -21,6 +23,7 @@ class _MapPageState extends State<MapPage> {
   double lng = -0.09;
   String message = "";
   bool isLoading = true;
+  bool isClicked = false;
   var storage = const FlutterSecureStorage();
   var dio = Dio();
 
@@ -159,6 +162,15 @@ class _MapPageState extends State<MapPage> {
                   left: kDefaultPadding,
                   child: GestureDetector(
                     onTap: () async {
+                      // setState(() {
+                      //   isClicked = true;
+                      // });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return PrLoader();
+                        }),
+                      );
                       Response response = await dio.post(
                         'https://447f-175-100-134-52.in.ngrok.io/getReflectanceM',
                         options: Options(headers: {
@@ -167,12 +179,21 @@ class _MapPageState extends State<MapPage> {
                         // data: jsonEncode(value),
                         data: {"lat": lat, "long": lng},
                       );
-                      Navigator.push(
+                      if (!mounted) return;
+                      // setState(() {
+                      //   isClicked = false;
+                      // });
+                      if (response.data['status'] == true) {
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) {
-                          return WaterQuality(lat: lat, long: lng);
+                          return WaterQuality(lat: lat, long: lng, res: response.data['data']);
                         }),
                       );
+                      } else {
+                        Navigator.of(context).pop();
+                        showSnack(context, 'Error: ${response.data['message']}: ${response.data['error']}', () {}, 'OK', 4);
+                      }
                       // var token = await storage.read(key: "token");
                       // Response response = await dio.post(
                       //   'https://api-ecolyf-alt.herokuapp.com/home/end',
@@ -212,16 +233,28 @@ class _MapPageState extends State<MapPage> {
                         shadowColor: kPrimaryColorAccent,
                         color: kPrimaryColor,
                         elevation: 5.0,
-                        child: const Center(
-                          child: Text(
-                            'Check quality',
-                            style: TextStyle(
-                              // fontFamily: 'Raleway',
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        child: 
+                        // isClicked
+                        //     ? Center(
+                        //         child: Transform.scale(
+                        //           scale: 0.5,
+                        //           child: CircularProgressIndicator(
+                        //             color: kLight,
+                        //             // strokeWidth: 2.0,
+                        //           ),
+                        //         ),
+                        //       )
+                        //     : 
+                            Center(
+                                child: Text(
+                                  'Check quality',
+                                  style: TextStyle(
+                                    // fontFamily: 'Raleway',
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
                   ),
