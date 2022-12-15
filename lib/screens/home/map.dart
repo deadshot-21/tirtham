@@ -56,6 +56,16 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  void setLocationTest(late,long) {
+    print(late);
+    print(long);
+    setState(() {
+      lat = late;
+      lng = long;
+      isLoading = false;
+    });
+  }
+
   void getLocation() async {
     print('hello');
     LocationData _locationData;
@@ -83,7 +93,9 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
-    getLocation();
+    checkPermission();
+    // getLocation();
+    setLocationTest(30.018749999999997,-84.01875);
     super.initState();
   }
 
@@ -172,7 +184,7 @@ class _MapPageState extends State<MapPage> {
                         }),
                       );
                       Response response = await dio.post(
-                        'https://447f-175-100-134-52.in.ngrok.io/getReflectanceM',
+                        'https://7c60-175-100-134-20.in.ngrok.io/getReflectanceL',
                         options: Options(headers: {
                           HttpHeaders.contentTypeHeader: "application/json",
                         }),
@@ -184,15 +196,23 @@ class _MapPageState extends State<MapPage> {
                       //   isClicked = false;
                       // });
                       if (response.data['status'] == true) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return WaterQuality(lat: lat, long: lng, res: response.data['data']);
-                        }),
-                      );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return WaterQuality(
+                                lat: lat,
+                                long: lng,
+                                res: response.data['data']);
+                          }),
+                        );
                       } else {
                         Navigator.of(context).pop();
-                        showSnack(context, 'Error: ${response.data['message']}: ${response.data['error']}', () {}, 'OK', 4);
+                        showSnack(
+                            context,
+                            'Error: ${response.data['message']}: ${response.data['error']}',
+                            () {},
+                            'OK',
+                            4);
                       }
                       // var token = await storage.read(key: "token");
                       // Response response = await dio.post(
@@ -233,28 +253,28 @@ class _MapPageState extends State<MapPage> {
                         shadowColor: kPrimaryColorAccent,
                         color: kPrimaryColor,
                         elevation: 5.0,
-                        child: 
-                        // isClicked
-                        //     ? Center(
-                        //         child: Transform.scale(
-                        //           scale: 0.5,
-                        //           child: CircularProgressIndicator(
-                        //             color: kLight,
-                        //             // strokeWidth: 2.0,
-                        //           ),
-                        //         ),
-                        //       )
-                        //     : 
+                        child:
+                            // isClicked
+                            //     ? Center(
+                            //         child: Transform.scale(
+                            //           scale: 0.5,
+                            //           child: CircularProgressIndicator(
+                            //             color: kLight,
+                            //             // strokeWidth: 2.0,
+                            //           ),
+                            //         ),
+                            //       )
+                            //     :
                             Center(
-                                child: Text(
-                                  'Check quality',
-                                  style: TextStyle(
-                                    // fontFamily: 'Raleway',
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                          child: Text(
+                            'Check quality',
+                            style: TextStyle(
+                              // fontFamily: 'Raleway',
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

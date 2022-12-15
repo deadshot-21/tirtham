@@ -46,12 +46,11 @@ class _WaterQualityState extends State<WaterQuality> {
                     fontSize: 32.0,
                     fontWeight: FontWeight.bold,
                     color: kPrimaryColor,
-
                   ),
                 ),
                 SizedBox(height: 5),
                 Text(
-                  'Chlorophyl: ${widget.res['predicted_chl']}',
+                  'Chlorophyll: ${widget.res['predicted_chl']}',
                   style: TextStyle(
                     fontSize: 16.0,
                   ),
@@ -63,7 +62,6 @@ class _WaterQualityState extends State<WaterQuality> {
                     fontSize: 32.0,
                     fontWeight: FontWeight.bold,
                     color: kPrimaryColor,
-
                   ),
                 ),
                 SizedBox(height: 5),
@@ -81,15 +79,13 @@ class _WaterQualityState extends State<WaterQuality> {
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
-                  'Wavelength: ${widget.res['calculated_vars']['w']}',
+                  'Wavelength: ${widget.res['calculated_vars']['w']} nm',
                   style: TextStyle(
                     fontSize: 16.0,
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
                   'Above surface reflectance (443): ${widget.res['calculated_vars']['R443']}',
                   style: TextStyle(
@@ -97,7 +93,6 @@ class _WaterQualityState extends State<WaterQuality> {
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
                   'Below surface reflectance (443): ${widget.res['calculated_vars']['r443']}',
                   style: TextStyle(
@@ -105,7 +100,6 @@ class _WaterQualityState extends State<WaterQuality> {
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
                   'Seawater absorption coefficient (443): ${widget.res['calculated_vars']['aw443']}',
                   style: TextStyle(
@@ -113,7 +107,6 @@ class _WaterQualityState extends State<WaterQuality> {
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
                   'Seawater backscattering coefficient (443): ${widget.res['calculated_vars']['bw443']}',
                   style: TextStyle(
@@ -137,7 +130,6 @@ class _WaterQualityState extends State<WaterQuality> {
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
                   'Above surface reflectance (443): ${widget.res['satellite_data']['R443']}',
                   style: TextStyle(
@@ -145,7 +137,6 @@ class _WaterQualityState extends State<WaterQuality> {
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
                   'Above surface reflectance (488): ${widget.res['satellite_data']['R488']}',
                   style: TextStyle(
@@ -153,7 +144,6 @@ class _WaterQualityState extends State<WaterQuality> {
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
                   'Above surface reflectance (550): ${widget.res['satellite_data']['R550']}',
                   style: TextStyle(
@@ -161,7 +151,6 @@ class _WaterQualityState extends State<WaterQuality> {
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
                   'Above surface reflectance (667): ${widget.res['satellite_data']['R667']}',
                   style: TextStyle(
@@ -169,9 +158,8 @@ class _WaterQualityState extends State<WaterQuality> {
                   ),
                 ),
                 SizedBox(height: 5),
-
                 Text(
-                  'Timestamp: ${widget.res['satellite_data']['date']}',
+                  'Date: ${widget.res['satellite_data']['date']}',
                   style: TextStyle(
                     fontSize: 16.0,
                   ),
