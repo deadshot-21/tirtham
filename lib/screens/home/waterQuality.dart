@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:tirtham/constants.dart';
+import 'package:tirtham/utils/addressToDict.dart';
 
 class WaterQuality extends StatefulWidget {
   const WaterQuality(
@@ -14,6 +16,62 @@ class WaterQuality extends StatefulWidget {
 }
 
 class _WaterQualityState extends State<WaterQuality> {
+  String tsi = "";
+  String tclass = "";
+  String phos = "";
+  String sd = "";
+  String tdesc = "";
+  Map<dynamic, dynamic> addressMap = {
+    'city': '',
+    'state': '',
+    'country': '',
+  };
+
+  Future<void> estimate() async {
+    double c = double.parse(widget.res['predicted_chl']);
+
+    if (c < 2.6) {
+      tsi = "< 30—40";
+      tclass = "Oligotrophic or hipotrophic";
+      phos = "0—12";
+      sd = "> 8—4";
+      tdesc =
+          "Low in nutrients and not productive in terms of aquatic animal and plant life. It is usually accompanied by an abundance of dissolved oxygen";
+    } else if (c < 7.3) {
+      tsi = "40—50";
+      tclass = "Mesotrophic";
+      phos = "12—24";
+      sd = "4—2";
+      tdesc =
+          "Intermediate levels of nutrients, fairly productive in terms of aquatic animal and plant life and showing emerging signs of water quality problems.";
+    } else if (c < 56) {
+      tsi = "50—70";
+      tclass = "Eutrophic";
+      phos = "24—96";
+      sd = "2—0.5";
+      tdesc =
+          "Rich in nutrients, very productive in terms of aquatic animal and plant life and showing increasing signs of water quality problems.";
+    } else {
+      tsi = "50—70";
+      tclass = "Eutrophic";
+      phos = "24—96";
+      sd = "2—0.5";
+      tdesc =
+          "Very high nutrient concentrations where plant growth is determined by physical factors. Water quality problems are serious and almost continuous.";
+    }
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(widget.lat, widget.long);
+    addressMap = addressToDict(placemarks);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    estimate();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +97,27 @@ class _WaterQualityState extends State<WaterQuality> {
                     fontSize: 16.0,
                   ),
                 ),
+                SizedBox(height: 30),
+                Text(
+                  'City: ${addressMap['city'] == "" ? 'Ocean/Sea' : addressMap['city']}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'State: ${addressMap['state']}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Country: ${addressMap['country']}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
                 SizedBox(height: 40),
                 Text(
                   'Predictions',
@@ -50,7 +129,57 @@ class _WaterQualityState extends State<WaterQuality> {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  'Chlorophyll: ${widget.res['predicted_chl']}',
+                  'Chlorophyll (μg/L): ${widget.res['predicted_chl']}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 30),
+                Text(
+                  'The estimated values are as follows:',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Trophic State Index: ${tsi}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Trophic Class: ${tclass}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Phosphorus (μg/L): ${phos}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Secchi depth (m): ${sd}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 30),
+                Text(
+                  'What is ${tclass} water?',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  '${tdesc}',
                   style: TextStyle(
                     fontSize: 16.0,
                   ),
@@ -122,13 +251,13 @@ class _WaterQualityState extends State<WaterQuality> {
                     color: kPrimaryColor,
                   ),
                 ),
-                SizedBox(height: 5),
-                Text(
-                  'Above surface reflectance (412): ${widget.res['satellite_data']['R412']}',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
+                // SizedBox(height: 5),
+                // Text(
+                //   'Above surface reflectance (412): ${widget.res['satellite_data']['R412']}',
+                //   style: TextStyle(
+                //     fontSize: 16.0,
+                //   ),
+                // ),
                 SizedBox(height: 5),
                 Text(
                   'Above surface reflectance (443): ${widget.res['satellite_data']['R443']}',

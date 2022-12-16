@@ -95,7 +95,11 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     checkPermission();
     // getLocation();
-    setLocationTest(30.018749999999997,-84.01875);
+    // gulf of mexico
+    // setLocationTest(30.018749999999997,-84.01875);
+    // setLocationTest(30.018749999999997,-85.93124999999999);
+    // ganga 
+    setLocationTest(25.477308,83.513130);
     super.initState();
   }
 
@@ -184,7 +188,7 @@ class _MapPageState extends State<MapPage> {
                         }),
                       );
                       Response response = await dio.post(
-                        'https://7c60-175-100-134-20.in.ngrok.io/getReflectanceL',
+                        'https://a898-27-121-100-200.in.ngrok.io/getReflectanceL',
                         options: Options(headers: {
                           HttpHeaders.contentTypeHeader: "application/json",
                         }),
