@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tirtham/screens/home/home.dart';
+import 'package:tirtham/screens/home/timeSeries.dart';
 
 import 'theme.dart';
 
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Home(),
+      // home: TimeSeries(lat: 22.288525, long: 70.782002, res: {}),
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),
     );

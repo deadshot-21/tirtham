@@ -4,10 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geocoding/geocoding.dart' as g;
+// import 'package:latlng/latlng.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:tirtham/constants.dart';
 import 'package:tirtham/screens/home/prLoader.dart';
+import 'package:tirtham/screens/home/timeSeries.dart';
+import 'package:tirtham/screens/home/tsLoader.dart';
 import 'package:tirtham/screens/home/waterQuality.dart';
 import 'package:tirtham/utils/snack.dart';
 
@@ -26,6 +30,9 @@ class _MapPageState extends State<MapPage> {
   bool isClicked = false;
   var storage = const FlutterSecureStorage();
   var dio = Dio();
+  String query = "varanasi";
+  final TextEditingController _tc = TextEditingController();
+  MapController _mc = MapController();
 
   void checkPermission() async {
     bool _serviceEnabled;
@@ -56,7 +63,7 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  void setLocationTest(late,long) {
+  void setLocationTest(late, long) {
     print(late);
     print(long);
     setState(() {
@@ -79,12 +86,11 @@ class _MapPageState extends State<MapPage> {
 
     // });
 
-    // setState((){
+    // setState(() {
     //   location.onLocationChanged.listen((LocationData currentLocation) {
-    //   lat = _locationData.latitude!;
-    //   lng = _locationData.longitude!;
-    //   isLoading=false;
-    // });
+    //     lat = _locationData.latitude!;
+    //     lng = _locationData.longitude!;
+    //   });
     // });
     print(lng);
     print(lat);
@@ -93,14 +99,16 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
+    super.initState();
+    _mc = MapController();
     checkPermission();
-    // getLocation();
+    getLocation();
+
     // gulf of mexico
     // setLocationTest(30.018749999999997,-84.01875);
     // setLocationTest(30.018749999999997,-85.93124999999999);
-    // ganga 
-    setLocationTest(25.477308,83.513130);
-    super.initState();
+    // ganga
+    // setLocationTest(25.477308,83.513130);
   }
 
   @override
@@ -124,21 +132,77 @@ class _MapPageState extends State<MapPage> {
             //   toolbarHeight: kToolbarHeight + 20.0,
             //   foregroundColor: kDark,
             // ),
+            appBar: AppBar(
+              elevation: 0,
+              // forceElevated: isScrollable,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              foregroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? kLight
+                  : kDark[900],
+              // backgroundColor: Colors.transparent,
+              title: TextFormField(
+                controller: _tc,
+                // autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Search',
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  border: InputBorder.none,
+                ),
+                onChanged: (value) {
+                  query = value;
+                },
+                validator: (val) => val!.isEmpty
+                    //  || (!RegExp(r"^[a-zA-Z0-9]+").hasMatch(val))
+                    ? 'Search name should not be empty'
+                    : null,
+                textInputAction: TextInputAction.search,
+                onFieldSubmitted: (val) async {
+                  var loc = (await g.locationFromAddress(query));
+                  setLocation(loc[loc.length - 1]);
+                  _mc.move(
+                      LatLng(loc[loc.length - 1].latitude,
+                          loc[loc.length - 1].longitude),
+                      10);
+                },
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.clear_rounded),
+                  onPressed: () {
+                    // clear query
+                    _tc.text = "";
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.search_rounded),
+                  onPressed: () async {
+                    var loc = (await g.locationFromAddress(query));
+                    setLocation(loc[loc.length - 1]);
+                    _mc.move(
+                        LatLng(loc[loc.length - 1].latitude,
+                            loc[loc.length - 1].longitude),
+                        10);
+                  },
+                ),
+              ],
+            ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: FloatingActionButton(
-              child: const Icon(Icons.my_location_rounded),
+              child: const Icon(Icons.my_location_rounded,),
               // foregroundColor: MediaQuery.of(context).platformBrightness ==
               //                           Brightness.light
               //                       ? kDark[900]
               //                       : Colors.white,
               foregroundColor: kPrimaryColor,
-              onPressed: () {
+              backgroundColor: kDark[900],
+              onPressed: () async {
                 getLocation();
               },
             ),
             body: Stack(
               children: [
                 FlutterMap(
+                  mapController: _mc,
                   options: MapOptions(
                       center: LatLng(lat, lng),
                       zoom: 18.0,
@@ -174,113 +238,163 @@ class _MapPageState extends State<MapPage> {
                 ),
                 Positioned(
                   bottom: kDefaultPadding,
-                  right: kDefaultPadding * 2 + 100.0,
+                  right: kDefaultPadding * 2 + 80.0,
                   left: kDefaultPadding,
-                  child: GestureDetector(
-                    onTap: () async {
-                      // setState(() {
-                      //   isClicked = true;
-                      // });
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return PrLoader();
-                        }),
-                      );
-                      Response response = await dio.post(
-                        'https://a898-27-121-100-200.in.ngrok.io/getReflectanceL',
-                        options: Options(headers: {
-                          HttpHeaders.contentTypeHeader: "application/json",
-                        }),
-                        // data: jsonEncode(value),
-                        data: {"lat": lat, "long": lng},
-                      );
-                      if (!mounted) return;
-                      // setState(() {
-                      //   isClicked = false;
-                      // });
-                      if (response.data['status'] == true) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return WaterQuality(
-                                lat: lat,
-                                long: lng,
-                                res: response.data['data']);
-                          }),
-                        );
-                      } else {
-                        Navigator.of(context).pop();
-                        showSnack(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          // setState(() {
+                          //   isClicked = true;
+                          // });
+                          Navigator.push(
                             context,
-                            'Error: ${response.data['message']}: ${response.data['error']}',
-                            () {},
-                            'OK',
-                            4);
-                      }
-                      // var token = await storage.read(key: "token");
-                      // Response response = await dio.post(
-                      //   'https://api-ecolyf-alt.herokuapp.com/home/end',
-                      //   options: Options(headers: {
-                      //     HttpHeaders.contentTypeHeader: "application/json",
-                      //     HttpHeaders.authorizationHeader:"Bearer " + token!,
-
-                      //   }),
-                      //   // data: jsonEncode(value),
-                      //   data: {
-
-                      //   },
-                      // );
-                      // if (response.data['status'] != true) {
-                      //   setState(() {
-                      //     message = response.data['message'];
-                      //   });
-                      // } else {
-                      //   print(response.data);
-                      //   // Navigator.of(context).pop();
-                      //    Navigator.pushReplacement(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) {
-                      //     return const Home();
-                      //   }),
-                      //   );
-                      //   // print(response.toString());
-                      // }
-                    },
-                    child: Container(
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                      child: Material(
-                        borderRadius: BorderRadius.circular(25.0),
-                        shadowColor: kPrimaryColorAccent,
-                        color: kPrimaryColor,
-                        elevation: 5.0,
-                        child:
-                            // isClicked
-                            //     ? Center(
-                            //         child: Transform.scale(
-                            //           scale: 0.5,
-                            //           child: CircularProgressIndicator(
-                            //             color: kLight,
-                            //             // strokeWidth: 2.0,
-                            //           ),
-                            //         ),
-                            //       )
-                            //     :
-                            Center(
-                          child: Text(
-                            'Check quality',
-                            style: TextStyle(
-                              // fontFamily: 'Raleway',
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                            MaterialPageRoute(builder: (context) {
+                              return PrLoader();
+                            }),
+                          );
+                          try {
+                            
+                          Response response = await dio.post(
+                            'https://f478-103-250-157-188.in.ngrok.io/getReflectanceL',
+                            options: Options(headers: {
+                              HttpHeaders.contentTypeHeader: "application/json",
+                            }),
+                            // data: jsonEncode(value),
+                            data: {"lat": lat, "long": lng},
+                          );
+                          if (!mounted) return;
+                          // setState(() {
+                          //   isClicked = false;
+                          // });
+                          if (response.data['status'] == true) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return WaterQuality(
+                                    lat: lat,
+                                    long: lng,
+                                    res: response.data['data']);
+                              }),
+                            );
+                          } else {
+                            Navigator.of(context).pop();
+                            showSnack(
+                                context,
+                                'Error: ${response.data['message']}: ${response.data['error']}',
+                                () {},
+                                'OK',
+                                4);
+                          }
+                          } catch (e) {
+                            Navigator.of(context).pop();
+                            showSnack(
+                                context,
+                                'Server error',
+                                () {},
+                                'OK',
+                                4);
+                          }
+                        },
+                        child: Container(
+                          // height: 50.0,
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Check quality',
+                              style: TextStyle(
+                                // fontFamily: 'Raleway',
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          // setState(() {
+                          //   isClicked = true;
+                          // });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return TsLoader();
+                            }),
+                          );
+                          try {
+                            
+                          Response response = await dio.post(
+                            'https://f478-103-250-157-188.in.ngrok.io/timeSeries',
+                            options: Options(headers: {
+                              HttpHeaders.contentTypeHeader: "application/json",
+                            }),
+                            // data: jsonEncode(value),
+                            data: {"lat": lat, "long": lng},
+                          );
+                          if (!mounted) return;
+                          // setState(() {
+                          //   isClicked = false;
+                          // });
+                          if (response.data['status'] == true) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return TimeSeries(
+                                    lat: lat,
+                                    long: lng,
+                                    res: response.data['data']);
+                              }),
+                            );
+                          } else {
+                            Navigator.of(context).pop();
+                            showSnack(
+                                context,
+                                'Error: ${response.data['message']}: ${response.data['error']}',
+                                () {},
+                                'OK',
+                                4);
+                          }
+                          } catch (e) {
+                            Navigator.of(context).pop();
+                            showSnack(
+                                context,
+                                'Server error',
+                                () {},
+                                'OK',
+                                4);
+                          }
+                        },
+                        child: Container(
+                          height: 50.0,
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Future analysis',
+                              style: TextStyle(
+                                // fontFamily: 'Raleway',
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
