@@ -8,17 +8,17 @@ import 'package:tirtham/utils/addressToDict.dart';
 import 'package:tirtham/utils/date_convert.dart';
 import 'package:collection/collection.dart';
 
-class TimeSeries extends StatefulWidget {
-  const TimeSeries(
+class TimeSeries0 extends StatefulWidget {
+  const TimeSeries0(
       {super.key, required this.lat, required this.long, required this.res});
   final double lat;
   final double long;
   final Map res;
   @override
-  State<TimeSeries> createState() => _TimeSeriesState();
+  State<TimeSeries0> createState() => _TimeSeries0State();
 }
 
-class _TimeSeriesState extends State<TimeSeries> {
+class _TimeSeries0State extends State<TimeSeries0> {
   String tsi = "";
   String tclass = "";
   String phos = "";
@@ -40,28 +40,26 @@ class _TimeSeriesState extends State<TimeSeries> {
         await placemarkFromCoordinates(widget.lat, widget.long);
     addressMap = addressToDict(placemarks);
     setState(() {});
-    // print(widget.res['time_series'][widget.res['time_series'].length-1]);
-    var str_arr = widget.res['time_series'].sublist(widget.res['time_series'].length-widget.res['steps']);
-    print(str_arr);
 
-    
+    List str_arr = widget.res['time_series'];
 
-    if(widget.res['steps'] == str_arr.length){
-    str_arr.forEach((arr) {
+    if(str_arr.length == widget.res['steps']){
+    str_arr.forEach((element) {
+      var arr = element.split(" ");
       preds.add(arr);
-      if (double.parse(arr) > maxC) {
+      if (double.parse(arr[0]) > maxC) {
         setState(() {
-          maxC = double.parse(arr);
+          maxC = double.parse(arr[0]);
         });
       }
-      if (double.parse(arr) < minC) {
+      if (double.parse(arr[0]) < minC) {
         setState(() {
-          minC = double.parse(arr);
+          minC = double.parse(arr[0]);
         });
       }
     });
     preds.forEach((element) {
-      diff.add(double.parse(element) - minC);
+      diff.add(double.parse(element[0]) - minC);
     });
     }
     setState(() {
@@ -188,7 +186,7 @@ class _TimeSeriesState extends State<TimeSeries> {
         LineChartBarData(
           spots: [
             for (var i = 0; i < preds.length; i++) ...[
-              FlSpot(i.toDouble(), double.parse(preds[i])),
+              FlSpot(i.toDouble(), double.parse(preds[i][0])),
               // FlSpot(2.6, 2),
               // FlSpot(4.9, 5),
               // FlSpot(6.8, 3.1),
@@ -366,39 +364,39 @@ class _TimeSeriesState extends State<TimeSeries> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Chlorophyll (μg/L): ${preds[i]}',
+                                      'Chlorophyll (μg/L): ${preds[i][0]}',
                                       style: TextStyle(
                                         fontSize: 16.0,
                                       ),
                                     ),
-                                    // SizedBox(height: 5),
-                                    // Text(
-                                    //   'Above surface reflectance (443): ${preds[i][1]}',
-                                    //   style: TextStyle(
-                                    //     fontSize: 16.0,
-                                    //   ),
-                                    // ),
-                                    // SizedBox(height: 5),
-                                    // Text(
-                                    //   'Below surface reflectance (443): ${preds[i][2]}',
-                                    //   style: TextStyle(
-                                    //     fontSize: 16.0,
-                                    //   ),
-                                    // ),
-                                    // SizedBox(height: 5),
-                                    // Text(
-                                    //   'Seawater backscattering coefficient (443): ${preds[i][3]}',
-                                    //   style: TextStyle(
-                                    //     fontSize: 16.0,
-                                    //   ),
-                                    // ),
-                                    // SizedBox(height: 5),
-                                    // Text(
-                                    //   'Total absorption coefficient (443): ${preds[i][4]}',
-                                    //   style: TextStyle(
-                                    //     fontSize: 16.0,
-                                    //   ),
-                                    // ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      'Above surface reflectance (443): ${preds[i][1]}',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      'Below surface reflectance (443): ${preds[i][2]}',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      'Seawater backscattering coefficient (443): ${preds[i][3]}',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      'Total absorption coefficient (443): ${preds[i][4]}',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
                                   ],
                                 )),
                           ),

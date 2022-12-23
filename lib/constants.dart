@@ -13,6 +13,7 @@ const kGrey = Color(0xFF8996a6);
 const kDefaultPadding = 20.0;
 const kForeground = Color(0xFF1D1C29);
 
+const baseAPI = 'https://4f35-27-121-100-231.in.ngrok.io';
 // 191A19 - background
 // 4E9F3D - green
 // 1E5128 - dark green

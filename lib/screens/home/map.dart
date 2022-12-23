@@ -149,7 +149,11 @@ class _MapPageState extends State<MapPage> {
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
+                  if(value == '') {
+                    query = 'varanasi';
+                  } else {
                   query = value;
+                  }
                 },
                 validator: (val) => val!.isEmpty
                     //  || (!RegExp(r"^[a-zA-Z0-9]+").hasMatch(val))
@@ -257,7 +261,7 @@ class _MapPageState extends State<MapPage> {
                           try {
                             
                           Response response = await dio.post(
-                            'https://f478-103-250-157-188.in.ngrok.io/getReflectanceL',
+                            '$baseAPI/getReflectanceL',
                             options: Options(headers: {
                               HttpHeaders.contentTypeHeader: "application/json",
                             }),
@@ -334,7 +338,7 @@ class _MapPageState extends State<MapPage> {
                           try {
                             
                           Response response = await dio.post(
-                            'https://f478-103-250-157-188.in.ngrok.io/timeSeries',
+                            '$baseAPI/timeSeries',
                             options: Options(headers: {
                               HttpHeaders.contentTypeHeader: "application/json",
                             }),
