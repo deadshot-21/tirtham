@@ -73,7 +73,7 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  void getLocation() async {
+  Future<LocationData> getLocation() async {
     print('hello');
     LocationData _locationData;
     Location location = Location();
@@ -95,6 +95,7 @@ class _MapPageState extends State<MapPage> {
     print(lng);
     print(lat);
     print(_locationData);
+    return _locationData;
   }
 
   @override
@@ -149,10 +150,10 @@ class _MapPageState extends State<MapPage> {
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
-                  if(value == '') {
+                  if (value == '') {
                     query = 'varanasi';
                   } else {
-                  query = value;
+                    query = value;
                   }
                 },
                 validator: (val) => val!.isEmpty
@@ -192,7 +193,9 @@ class _MapPageState extends State<MapPage> {
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: FloatingActionButton(
-              child: const Icon(Icons.my_location_rounded,),
+              child: const Icon(
+                Icons.my_location_rounded,
+              ),
               // foregroundColor: MediaQuery.of(context).platformBrightness ==
               //                           Brightness.light
               //                       ? kDark[900]
@@ -200,7 +203,8 @@ class _MapPageState extends State<MapPage> {
               foregroundColor: kPrimaryColor,
               backgroundColor: kDark[900],
               onPressed: () async {
-                getLocation();
+                var loc = await getLocation();
+                _mc.move(LatLng(loc.latitude!, loc.longitude!), 10);
               },
             ),
             body: Stack(
@@ -259,46 +263,41 @@ class _MapPageState extends State<MapPage> {
                             }),
                           );
                           try {
-                            
-                          Response response = await dio.post(
-                            '$baseAPI/getReflectanceL',
-                            options: Options(headers: {
-                              HttpHeaders.contentTypeHeader: "application/json",
-                            }),
-                            // data: jsonEncode(value),
-                            data: {"lat": lat, "long": lng},
-                          );
-                          if (!mounted) return;
-                          // setState(() {
-                          //   isClicked = false;
-                          // });
-                          if (response.data['status'] == true) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return WaterQuality(
-                                    lat: lat,
-                                    long: lng,
-                                    res: response.data['data']);
+                            Response response = await dio.post(
+                              '$baseAPI/getReflectanceL',
+                              options: Options(headers: {
+                                HttpHeaders.contentTypeHeader:
+                                    "application/json",
                               }),
+                              // data: jsonEncode(value),
+                              data: {"lat": lat, "long": lng},
                             );
-                          } else {
-                            Navigator.of(context).pop();
-                            showSnack(
+                            if (!mounted) return;
+                            // setState(() {
+                            //   isClicked = false;
+                            // });
+                            if (response.data['status'] == true) {
+                              Navigator.pushReplacement(
                                 context,
-                                'Error: ${response.data['message']}: ${response.data['error']}',
-                                () {},
-                                'OK',
-                                4);
-                          }
+                                MaterialPageRoute(builder: (context) {
+                                  return WaterQuality(
+                                      lat: lat,
+                                      long: lng,
+                                      res: response.data['data']);
+                                }),
+                              );
+                            } else {
+                              Navigator.of(context).pop();
+                              showSnack(
+                                  context,
+                                  'Error: ${response.data['message']}: ${response.data['error']}',
+                                  () {},
+                                  'OK',
+                                  4);
+                            }
                           } catch (e) {
                             Navigator.of(context).pop();
-                            showSnack(
-                                context,
-                                'Server error',
-                                () {},
-                                'OK',
-                                4);
+                            showSnack(context, 'Server error', () {}, 'OK', 4);
                           }
                         },
                         child: Container(
@@ -336,46 +335,41 @@ class _MapPageState extends State<MapPage> {
                             }),
                           );
                           try {
-                            
-                          Response response = await dio.post(
-                            '$baseAPI/timeSeries',
-                            options: Options(headers: {
-                              HttpHeaders.contentTypeHeader: "application/json",
-                            }),
-                            // data: jsonEncode(value),
-                            data: {"lat": lat, "long": lng},
-                          );
-                          if (!mounted) return;
-                          // setState(() {
-                          //   isClicked = false;
-                          // });
-                          if (response.data['status'] == true) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return TimeSeries(
-                                    lat: lat,
-                                    long: lng,
-                                    res: response.data['data']);
+                            Response response = await dio.post(
+                              '$baseAPI/timeSeries',
+                              options: Options(headers: {
+                                HttpHeaders.contentTypeHeader:
+                                    "application/json",
                               }),
+                              // data: jsonEncode(value),
+                              data: {"lat": lat, "long": lng},
                             );
-                          } else {
-                            Navigator.of(context).pop();
-                            showSnack(
+                            if (!mounted) return;
+                            // setState(() {
+                            //   isClicked = false;
+                            // });
+                            if (response.data['status'] == true) {
+                              Navigator.pushReplacement(
                                 context,
-                                'Error: ${response.data['message']}: ${response.data['error']}',
-                                () {},
-                                'OK',
-                                4);
-                          }
+                                MaterialPageRoute(builder: (context) {
+                                  return TimeSeries(
+                                      lat: lat,
+                                      long: lng,
+                                      res: response.data['data']);
+                                }),
+                              );
+                            } else {
+                              Navigator.of(context).pop();
+                              showSnack(
+                                  context,
+                                  'Error: ${response.data['message']}: ${response.data['error']}',
+                                  () {},
+                                  'OK',
+                                  4);
+                            }
                           } catch (e) {
                             Navigator.of(context).pop();
-                            showSnack(
-                                context,
-                                'Server error',
-                                () {},
-                                'OK',
-                                4);
+                            showSnack(context, 'Server error', () {}, 'OK', 4);
                           }
                         },
                         child: Container(

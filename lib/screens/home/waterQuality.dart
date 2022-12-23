@@ -26,9 +26,16 @@ class _WaterQualityState extends State<WaterQuality> {
     'state': '',
     'country': '',
   };
+  int fui = 0;
+  String fcolor = '0xFFFFFFFF';
+  String fWaterType1 = '';
+  String fWaterType2 = '';
+  String fDesc1 = '';
+  String fDesc2 = '';
 
   Future<void> estimate() async {
     double c = double.parse(widget.res['predicted_chl']);
+    double a = widget.res['fui_alpha'];
 
     if (c < 2.6) {
       tsi = "< 30—40";
@@ -59,6 +66,107 @@ class _WaterQualityState extends State<WaterQuality> {
       tdesc =
           "Very high nutrient concentrations where plant growth is determined by physical factors. Water quality problems are serious and almost continuous.";
     }
+
+    if (a < 42.83) {
+      fui = 1;
+      fcolor = '0xFF01008A';
+    } else if (a < 49.02) {
+      fui = 2;
+      fcolor = '0xFF01008A';
+    } else if (a < 60.01) {
+      fui = 3;
+      fcolor = '0xFF0000CC';
+    } else if (a < 79.23) {
+      fui = 4;
+      fcolor = '0xFF0000CC';
+    } else if (a < 106.94) {
+      fui = 5;
+      fcolor = '0xFF0065FF';
+    } else if (a < 137.03) {
+      fui = 6;
+      fcolor = '0xFF0096EB';
+    } else if (a < 160.97) {
+      fui = 7;
+      fcolor = '0xFF32B8D1';
+    } else if (a < 175.98) {
+      fui = 8;
+      fcolor = '0xFF08B885';
+    } else if (a < 186.67) {
+      fui = 9;
+      fcolor = '0xFF0AD06E';
+    } else if (a < 195.44) {
+      fui = 10;
+      fcolor = '0xFF50D06F';
+    } else if (a < 202.05) {
+      fui = 11;
+      fcolor = '0xFF5EE600';
+    } else if (a < 207.82) {
+      fui = 12;
+      fcolor = '0xFF8AEE00';
+    } else if (a < 213.57) {
+      fui = 13;
+      fcolor = '0xFF97EE01';
+    } else if (a < 219.34) {
+      fui = 14;
+      fcolor = '0xFFB5EE01';
+    } else if (a < 224.87) {
+      fui = 15;
+      fcolor = '0xFFC2EF00';
+    } else if (a < 230.23) {
+      fui = 16;
+      fcolor = '0xFFE7FA00';
+    } else if (a < 235.09) {
+      fui = 17;
+      fcolor = '0xFFF7F001';
+    } else if (a < 239.56) {
+      fui = 18;
+      fcolor = '0xFFF7E500';
+    } else if (a < 243.66) {
+      fui = 19;
+      fcolor = '0xFFF7DA00';
+    } else if (a < 247.25) {
+      fui = 20;
+      fcolor = '0xFFF7CF56';
+    } else {
+      fui = 21;
+      fcolor = '0xFFD9B557';
+    }
+    setState(() {});
+
+    if (fui < 3) {
+      fWaterType1 = 'Marine';
+      fDesc1 = 'High light penetration';
+    } else if (fui < 5) {
+      fWaterType1 = 'Tertiary';
+      fDesc1 = 'High light penetration';
+    } else if (fui < 9) {
+      fWaterType1 = 'Secondary';
+      fDesc1 =
+          'Dominated by algae, but increased dissolved organic material and some sediment';
+    } else {
+      fWaterType1 = 'Primary';
+      fDesc1 =
+          'High concentration of phytoplankton, nutrients, sediments and decreased light attenuation';
+    }
+
+    if (fui < 9) {
+      fWaterType2 = 'Open Sea';
+      fDesc2 =
+          'Dominated by microscopic algae, some sediment might be present but typically the Open Sea';
+    } else if (fui < 13) {
+      fWaterType2 = 'Coastal';
+      fDesc2 =
+          'Increased nutrient and phytoplankton, some minerals and dissolved organic material';
+    } else if (fui < 17) {
+      fWaterType2 =
+          'High nutrient and phytoplankton, increased sediment and dissolved organic material typical for Coastal waters';
+      fDesc2 = 'Dominated by algae';
+    } else {
+      fWaterType2 = 'Estuaries';
+      fDesc2 =
+          'Extremely high concentration of humic acids typical for rivers and Estuaries';
+    }
+
     List<Placemark> placemarks =
         await placemarkFromCoordinates(widget.lat, widget.long);
     addressMap = addressToDict(placemarks);
@@ -180,6 +288,83 @@ class _WaterQualityState extends State<WaterQuality> {
                 SizedBox(height: 5),
                 Text(
                   '${tdesc}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 40),
+                Text(
+                  'FUI index',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                    color: kPrimaryColor,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Hue angle (ɑ + ∆ɑ) : ${widget.res['fui_alpha']}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'FUI index : ${fui}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Water type 1 : ${fWaterType1}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                
+                Text(
+                  'Water type 2 : ${fWaterType2}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Water color : ',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Container(height: 30, width: 30, color: Color(int.parse(fcolor))),
+                SizedBox(height: 30),
+                Text(
+                  'What is ${fWaterType1} water?',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  '${fDesc1}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 40),
+                Text(
+                  'What is ${fWaterType2} water?',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  '${fDesc2}',
                   style: TextStyle(
                     fontSize: 16.0,
                   ),

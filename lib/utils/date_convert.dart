@@ -53,4 +53,14 @@ String setDate(date) {
     }
   }
 
+  String decreaseMonth(date, int noOfMonths) {
+    if (date.isNotEmpty) {
+      var d0 =  DateTime(DateTime.parse(date).year, DateTime.parse(date).month, DateTime.parse(date).day);
+      var d =  DateTime(d0.year, d0.month - noOfMonths, d0.day);
+      return formatDate(d);
+    } else {
+      return "";
+    }
+  }
+
   String formatDate(DateTime date) =>  DateFormat("yyyy-MM-dd").format(date);

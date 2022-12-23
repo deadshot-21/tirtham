@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       // home: TimeSeries(lat: 22.288525, long: 70.782002, res: {}),
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
