@@ -53,6 +53,9 @@ class _MapPageState extends State<MapPage> {
         print('Error');
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void setLocation(currentLocation) {
@@ -117,6 +120,7 @@ class _MapPageState extends State<MapPage> {
     // TODO: implement dispose
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
