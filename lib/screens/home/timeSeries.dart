@@ -44,9 +44,14 @@ class _TimeSeriesState extends State<TimeSeries> {
   String month_start = "";
   bool isLoading = false;
   Future<void> convert() async {
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(widget.lat, widget.long);
-    addressMap = addressToDict(placemarks);
+    List<Placemark> placemarks = [];
+    try {
+      placemarks = await placemarkFromCoordinates(widget.lat, widget.long);
+      addressMap = addressToDict(placemarks);
+    } catch (e) {
+      placemarks = [];
+    }
+    
     setState(() {});
     // print(widget.res['time_series'][widget.res['time_series'].length-1]);
     // var str_arr_future = widget.res['time_series'].sublist(widget.res['time_series'].length-widget.res['steps']);

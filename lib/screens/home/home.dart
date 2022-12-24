@@ -6,8 +6,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:tirtham/screens/autoTimeSeries/profile%20copy.dart';
 import 'package:tirtham/screens/home/map.dart';
-import 'package:tirtham/screens/profile/profile.dart';
+import 'package:tirtham/screens/autoTimeSeries/profile.dart';
 
 import '../../constants.dart';
 
@@ -77,7 +78,7 @@ class _HomeState extends State<Home> {
     _selectedIndex = 0;
     _screens = [
       MapPage(),
-      Profile(),
+      AutoTimeSeriesTab(),
     ];
 
     _pageController = PageController(initialPage: _selectedIndex);
@@ -126,8 +127,8 @@ class _HomeState extends State<Home> {
             label: 'Map',
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
-            label: 'Profile',
+            icon: Icon(Icons.analytics_rounded),
+            label: 'Time Series',
           ),
         ],
       ),

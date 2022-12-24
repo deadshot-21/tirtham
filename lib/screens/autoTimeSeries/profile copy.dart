@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tirtham/constants.dart';
-import 'package:tirtham/screens/profile/components/profilePic.dart';
+import 'package:tirtham/screens/autoTimeSeries/components/profilePic.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+class AutoTimeSeriesTab extends StatefulWidget {
+  const AutoTimeSeriesTab({Key? key}) : super(key: key);
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<AutoTimeSeriesTab> createState() => _AutoTimeSeriesTabState();
 }
 
-class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
+class _AutoTimeSeriesTabState extends State<AutoTimeSeriesTab> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -24,40 +24,43 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   bool isLoading = true;
   Map user = {};
   Map stats = {};
-  // Future<void> getStats() async {
-  //   var token = await storage.read(key: "token");
-  //   Response response = await dio.get(
-  //     "https://api-ecolyf-alt.herokuapp.com/home/getUser",
-  //     options: Options(headers: {
-  //       HttpHeaders.contentTypeHeader: "application/json",
-  //       HttpHeaders.authorizationHeader: "Bearer " + token!
-  //     }),
-  //   );
-  //   // print(response.data);
-  //   if (response.data['status'] == true) {
-  //     user = response.data['data']['user'];
-  //     print(user);
-  //     Response response1 = await dio.get(
-  //       "https://api-ecolyf-alt.herokuapp.com/home/getStats",
-  //       options: Options(headers: {
-  //         HttpHeaders.contentTypeHeader: "application/json",
-  //         HttpHeaders.authorizationHeader: "Bearer " + token
-  //       }),
-  //     );
-  //     if (response1.data['status'] == true) {
-  //       stats = response1.data['data'];
-  //       print(stats);
-  //     }
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   } else {
-  //     user = response.data['data'];
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
+  Future<void> getStats() async {
+    setState(() {
+      isLoading = false;
+    });
+    // var token = await storage.read(key: "token");
+    // Response response = await dio.get(
+    //   "https://api-ecolyf-alt.herokuapp.com/home/getUser",
+    //   options: Options(headers: {
+    //     HttpHeaders.contentTypeHeader: "application/json",
+    //     HttpHeaders.authorizationHeader: "Bearer " + token!
+    //   }),
+    // );
+    // // print(response.data);
+    // if (response.data['status'] == true) {
+    //   user = response.data['data']['user'];
+    //   print(user);
+    //   Response response1 = await dio.get(
+    //     "https://api-ecolyf-alt.herokuapp.com/home/getStats",
+    //     options: Options(headers: {
+    //       HttpHeaders.contentTypeHeader: "application/json",
+    //       HttpHeaders.authorizationHeader: "Bearer " + token
+    //     }),
+    //   );
+    //   if (response1.data['status'] == true) {
+    //     stats = response1.data['data'];
+    //     print(stats);
+    //   }
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // } else {
+    //   user = response.data['data'];
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // }
+  }
 
   Future<void> _refreshPage() async {
     setState(() {
@@ -70,7 +73,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // getStats();
+    getStats();
   }
 
   @override

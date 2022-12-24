@@ -167,9 +167,14 @@ class _WaterQualityState extends State<WaterQuality> {
           'Extremely high concentration of humic acids typical for rivers and Estuaries';
     }
 
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(widget.lat, widget.long);
-    addressMap = addressToDict(placemarks);
+    List<Placemark> placemarks = [];
+    try {
+      placemarks = await placemarkFromCoordinates(widget.lat, widget.long);
+      addressMap = addressToDict(placemarks);
+    } catch (e) {
+      placemarks = [];
+    }
+    
     setState(() {});
   }
 
