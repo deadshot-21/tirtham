@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:tirtham/screens/autoTimeSeries/profile%20copy.dart';
+import 'package:tirtham/screens/autoTimeSeries/autoTimeSeries.dart';
 import 'package:tirtham/screens/home/map.dart';
 import 'package:tirtham/screens/autoTimeSeries/profile.dart';
 
