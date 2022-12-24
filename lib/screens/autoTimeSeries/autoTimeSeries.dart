@@ -172,7 +172,12 @@ class _AutoTimeSeriesTabState extends State<AutoTimeSeriesTab>
                                       height: 20,
                                     ),
                                     Text(
-                                        "Present Chlorophyll: ${data[i]['chl'][0]['value']}"),
+                                        "Last Estimated Chlorophyll:"),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                        "${data[i]['chl'][0]['value']}"),
                                     SizedBox(
                                       height: 20,
                                     ),

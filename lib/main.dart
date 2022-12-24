@@ -15,6 +15,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
     );
   }
 }

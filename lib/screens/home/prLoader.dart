@@ -72,6 +72,8 @@ class _PrLoaderState extends State<PrLoader> {
               width: size.width*0.7,
               child: TextLiquidFill(
                 text: 'tirtham',
+                loadDuration: Duration(seconds: 10),
+                waveDuration: Duration(seconds: 3),
                 waveColor: kPrimaryColor,
                 boxBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 textStyle: TextStyle(

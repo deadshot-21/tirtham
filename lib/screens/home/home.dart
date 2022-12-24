@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tirtham/screens/autoTimeSeries/autoTimeSeries.dart';
 import 'package:tirtham/screens/home/map.dart';
 import 'package:tirtham/screens/autoTimeSeries/profile.dart';
+import 'package:tirtham/utils/snack.dart';
 
 import '../../constants.dart';
 
@@ -40,28 +42,25 @@ class _HomeState extends State<Home> {
   PageController _pageController = PageController();
   List<Widget> _screens = [];
 
-  // Future<void> getOrgs() async {
-  //   var token = await storage.read(key: "token");
-  //   Response response = await dio.get(
-  //     "http://20.124.13.106:8000/organisation/list",
-  //     options: Options(headers: {
-  //       HttpHeaders.contentTypeHeader: "application/json",
-  //       HttpHeaders.authorizationHeader: "Bearer " + token!
-  //     }),
-  //   );
-  //   print(response.data);
-  //   if (response.data['error'] != null) {
-  //     setState(() {
-  //       error = response.data['error'];
-  //       isLoading = false;
-  //     });
-  //   } else {
-  //     data = response.data['data'];
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
+  Future<void> sendFCM() async {
+    try {
+      // print()
+      final FirebaseMessaging fcm = FirebaseMessaging.instance;
+      fcm.getToken().then((value) async {
+      Response response = await dio.post(
+        '$baseAPI/addToken',
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+        }),
+        data: {
+          "token": value
+        }
+      );
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   // Future<void> _refreshPage() async {
   //   setState(() {
@@ -74,7 +73,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     // isLoading = true;
-    // getOrgs();
+      sendFCM();
     _selectedIndex = 0;
     _screens = [
       MapPage(),

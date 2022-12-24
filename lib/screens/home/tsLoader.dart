@@ -74,6 +74,8 @@ class _TsLoaderState extends State<TsLoader> {
               child: TextLiquidFill(
                 text: 'tirtham',
                 waveColor: kPrimaryColor,
+                loadDuration: Duration(seconds: 10),
+                waveDuration: Duration(seconds: 3),
                 boxBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 textStyle: TextStyle(
                   fontSize: 56.0,
