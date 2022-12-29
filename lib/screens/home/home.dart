@@ -47,6 +47,8 @@ class _HomeState extends State<Home> {
       // print()
       final FirebaseMessaging fcm = FirebaseMessaging.instance;
       fcm.getToken().then((value) async {
+        try {
+          
       Response response = await dio.post(
         '$baseAPI/addToken',
         options: Options(headers: {
@@ -56,6 +58,9 @@ class _HomeState extends State<Home> {
           "token": value
         }
       );
+      } catch (e) {
+          print(e);
+        }
       });
     } catch (e) {
       print(e);

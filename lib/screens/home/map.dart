@@ -299,7 +299,7 @@ class _MapPageState extends State<MapPage> {
                               Navigator.of(context).pop();
                               showSnack(
                                   context,
-                                  'Error: ${response.data['message']}: ${response.data['error']}',
+                                  'Error: ${response.data['message']}, Try searching near land or fresh water',
                                   () {},
                                   'OK',
                                   4);

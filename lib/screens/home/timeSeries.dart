@@ -307,7 +307,7 @@ class _TimeSeriesState extends State<TimeSeries> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 60,
-            interval: 1.5,
+            interval:2,
             getTitlesWidget: bottomTitleWidgets2,
           ),
         ),

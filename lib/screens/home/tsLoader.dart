@@ -14,34 +14,34 @@ class TsLoader extends StatefulWidget {
 
 class _TsLoaderState extends State<TsLoader> {
   double percent = 0.05;
-  String status = 'Fetching data from satellite ...';
+  String status = 'Initialising ...';
 
   Future<void> animate() async {
-    // await Future.delayed(Duration(seconds: 1));
-    // if(!mounted) return;
-    // setState(() {
-    //   percent = 0.1;
-    //   status = 'Fetching data from satellite ...';
-    // });
     await Future.delayed(Duration(seconds: 2));
+    if(!mounted) return;
+    setState(() {
+      percent = 0.1;
+      status = 'Fetching data from satellite ...';
+    });
+    await Future.delayed(Duration(seconds: 5));
     if(!mounted) return;
     setState(() {
       percent = 0.2;
       status = 'Loading model ...';
     });
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 15));
     if(!mounted) return;
     setState(() {
       percent = 0.6;
       status = 'Predicting values ...';
     });
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 10));
     if(!mounted) return;
     setState(() {
       percent = 0.8;
       status = 'Forecasting future values ...';
     });
-    await Future.delayed(Duration(seconds: 4));
+    await Future.delayed(Duration(seconds: 10));
     if(!mounted) return;
     setState(() {
       percent = 0.9;

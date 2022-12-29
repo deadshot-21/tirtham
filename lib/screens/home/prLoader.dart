@@ -17,7 +17,7 @@ class _PrLoaderState extends State<PrLoader> {
   String status = 'Fetching data from satellite ...';
 
   Future<void> animate() async {
-    await Future.delayed(Duration(seconds: 4));
+    await Future.delayed(Duration(seconds: 5));
     if(!mounted) return;
     setState(() {
       percent = 0.4;
@@ -29,7 +29,7 @@ class _PrLoaderState extends State<PrLoader> {
     //   percent = 0.2;
     //   status = 'Loading model ...';
     // });
-    await Future.delayed(Duration(seconds: 4));
+    await Future.delayed(Duration(seconds: 12));
     if(!mounted) return;
     setState(() {
       percent = 0.8;
@@ -41,7 +41,7 @@ class _PrLoaderState extends State<PrLoader> {
     //   percent = 0.8;
     //   status = 'Forecasting future values ...';
     // });
-    await Future.delayed(Duration(seconds: 8));
+    await Future.delayed(Duration(seconds: 15));
     if(!mounted) return;
     setState(() {
       percent = 0.9;
