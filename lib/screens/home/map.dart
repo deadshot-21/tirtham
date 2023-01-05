@@ -9,6 +9,7 @@ import 'package:geocoding/geocoding.dart' as g;
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:tirtham/constants.dart';
+import 'package:tirtham/screens/home/changeModel.dart';
 import 'package:tirtham/screens/home/prLoader.dart';
 import 'package:tirtham/screens/home/timeSeries.dart';
 import 'package:tirtham/screens/home/tsLoader.dart';
@@ -201,20 +202,49 @@ class _MapPageState extends State<MapPage> {
               ],
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            floatingActionButton: FloatingActionButton(
-              child: const Icon(
-                Icons.my_location_rounded,
-              ),
-              // foregroundColor: MediaQuery.of(context).platformBrightness ==
-              //                           Brightness.light
-              //                       ? kDark[900]
-              //                       : Colors.white,
-              foregroundColor: kPrimaryColor,
-              backgroundColor: kDark[900],
-              onPressed: () async {
-                var loc = await getLocation();
-                _mc.move(LatLng(loc.latitude!, loc.longitude!), 10);
-              },
+            floatingActionButton: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  heroTag: '1',
+                  child: const Icon(
+                    Icons.settings,
+                  ),
+                  // foregroundColor: MediaQuery.of(context).platformBrightness ==
+                  //                           Brightness.light
+                  //                       ? kDark[900]
+                  //                       : Colors.white,
+                  foregroundColor: kPrimaryColor,
+                  backgroundColor: kDark[900],
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return ChangeModel();
+                      }),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                FloatingActionButton(
+                  heroTag: '2',
+                  child: const Icon(
+                    Icons.my_location_rounded,
+                  ),
+                  // foregroundColor: MediaQuery.of(context).platformBrightness ==
+                  //                           Brightness.light
+                  //                       ? kDark[900]
+                  //                       : Colors.white,
+                  foregroundColor: kPrimaryColor,
+                  backgroundColor: kDark[900],
+                  onPressed: () async {
+                    var loc = await getLocation();
+                    _mc.move(LatLng(loc.latitude!, loc.longitude!), 10);
+                  },
+                ),
+              ],
             ),
             body: Stack(
               children: [
@@ -344,6 +374,12 @@ class _MapPageState extends State<MapPage> {
                             }),
                           );
                           try {
+                            var model = await storage.read(key: 'model');
+                            // if(model == null) {
+                            //   setState(() {
+                            //     model = 'Xgboost';
+                            //   });
+                            // }
                             Response response = await dio.post(
                               '$baseAPI/timeSeries',
                               options: Options(headers: {
@@ -351,7 +387,7 @@ class _MapPageState extends State<MapPage> {
                                     "application/json",
                               }),
                               // data: jsonEncode(value),
-                              data: {"lat": lat, "long": lng},
+                              data: {"lat": lat, "long": lng, "model": model == 'NBeats' ? 2 : 1},
                             );
                             if (!mounted) return;
                             // setState(() {

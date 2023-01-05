@@ -42,6 +42,7 @@ class _TimeSeriesState extends State<TimeSeries> {
   double maxC2 = 1;
   double minC2 = 100;
   String month_start = "";
+  String future_start = "";
   bool isLoading = false;
   Future<void> convert() async {
     List<Placemark> placemarks = [];
@@ -56,11 +57,12 @@ class _TimeSeriesState extends State<TimeSeries> {
     // print(widget.res['time_series'][widget.res['time_series'].length-1]);
     // var str_arr_future = widget.res['time_series'].sublist(widget.res['time_series'].length-widget.res['steps']);
     var str_arr =
-        widget.res['time_series'].sublist(widget.res['time_series'].length - 4);
+        widget.res['time_series'].sublist(widget.res['time_series'].length - 5);
     List str_arr_future = str_arr[0].trim().split(" ");
     month_real = str_arr[1].trim().split(" ");
     month_pred = str_arr[2].trim().split(" ");
     month_start = str_arr[3];
+    future_start = str_arr[4];
     print(month_start);
 
     if (widget.res['steps'] == str_arr_future.length) {
@@ -140,7 +142,7 @@ class _TimeSeriesState extends State<TimeSeries> {
       axisSide: meta.axisSide,
       // child: Text("${value.toInt() * 16}", style: style),
       child: Text(
-          "${increaseDate2(formatDate(DateTime.now()), 16 * (value.toInt()))}",
+          "${increaseDate2(formatDate(DateTime.parse(future_start)), 16 * (value.toInt()))}",
           style: style),
     );
   }
